@@ -10,7 +10,6 @@ data "alicloud_db_instance_classes" "default" {
 }
 module "mysql" {
   source = "../../"
-  region = var.region
   #################
   # Rds Instance
   #################
