@@ -58,7 +58,7 @@ variable "sql_collector_config_value" {
 variable "preferred_backup_period" {
   description = "DB Instance backup period."
   type        = list(string)
-  default     = []
+  default     = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 }
 variable "preferred_backup_time" {
   description = " DB instance backup time, in the format of HH:mmZ- HH:mmZ. "
