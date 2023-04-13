@@ -60,7 +60,7 @@ variable "tags" {
 }
 variable "instance_storage_type" {
   description = "The storage type of the instance"
-  default     = "local_ssd"
+  default     = "cloud_essd"
 }
 variable "sql_collector_status" {
   description = "The sql collector status of the instance. Valid values are `Enabled`, `Disabled`, Default to `Disabled`."
