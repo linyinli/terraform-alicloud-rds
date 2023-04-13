@@ -1,31 +1,4 @@
 #################
-# Provider
-#################
-variable "region" {
-  description = "(Deprecated from version 2.4.0)The region used to launch this module resources."
-  type        = string
-  default     = ""
-}
-
-variable "profile" {
-  description = "(Deprecated from version 2.4.0)The profile name as set in the shared credentials file. If not set, it will be sourced from the ALICLOUD_PROFILE environment variable."
-  type        = string
-  default     = ""
-}
-
-variable "shared_credentials_file" {
-  description = "(Deprecated from version 2.4.0)This is the path to the shared credentials file. If this is not set and a profile is specified, $HOME/.aliyun/config.json will be used."
-  type        = string
-  default     = ""
-}
-
-variable "skip_region_validation" {
-  description = "(Deprecated from version 2.4.0)Skip static validation of region ID. Used by users of alternative AlibabaCloud-like APIs or users w/ access to regions that are not public (yet)."
-  type        = bool
-  default     = false
-}
-
-#################
 # Rds Instance
 #################
 variable "create_instance" {
@@ -35,7 +8,7 @@ variable "create_instance" {
 }
 
 variable "engine" {
-  description = "RDS Database type. Value options: MySQL, SQLServer, PostgreSQL, and PPAS"
+  description = "RDS Database type. Value options: MySQL, SQLServer, PostgreSQL, MariaDB."
   type        = string
   default     = "MySQL"
 }
@@ -43,7 +16,7 @@ variable "engine" {
 variable "engine_version" {
   description = "RDS Database version. Value options can refer to the latest docs [CreateDBInstance](https://www.alibabacloud.com/help/doc-detail/26228.htm) `EngineVersion`"
   type        = string
-  default     = ""
+  default     = "8.0"
 }
 
 variable "instance_name" {
@@ -55,17 +28,17 @@ variable "instance_name" {
 variable "instance_type" {
   description = "DB Instance type, for example: mysql.n1.micro.1. full list is : https://www.alibabacloud.com/help/zh/doc-detail/26312.htm."
   type        = string
-  default     = ""
+  default     = "mysql.n2.medium.1"
 }
 
 variable "instance_storage_type" {
-  description = "The storage type of DB instance."
+  description = "The storage type of DB instance. Value options: cloud_essd, cloud_essd2, cloud_essd3, local_ssd, depended on instance type."
   type        = string
   default     = "cloud_essd"
 }
 
 variable "instance_storage" {
-  description = "The storage capacity of the instance. Unit: GB. The storage capacity increases at increments of 5 GB. For more information, see [Instance Types](https://www.alibabacloud.com/help/doc-detail/26312.htm)."
+  description = "The storage capacity of the instance. Unit: GB. Valid values: 20~6000. The storage capacity increases at increments of 5 GB. For more information, see [Instance Types](https://www.alibabacloud.com/help/doc-detail/26312.htm)."
   type        = number
   default     = 20
 }
@@ -85,19 +58,19 @@ variable "period" {
 variable "security_ips" {
   description = " List of IP addresses allowed to access all databases of an instance. The list contains up to 1,000 IP addresses, separated by commas. Supported formats include 0.0.0.0/0, 10.23.12.24 (IP), and 10.23.12.24/24 (Classless Inter-Domain Routing (CIDR) mode. /24 represents the length of the prefix in an IP address. The range of the prefix length is [1,32])."
   type        = list(string)
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 
 variable "vswitch_id" {
   description = "The virtual switch ID to launch DB instances in one VPC."
   type        = string
-  default     = ""
+  default     = "vsw-wz9dx8gjsk2hhcajdnfoj"
 }
 
 variable "security_group_ids" {
-  description = "List of VPC security group ids to associate with rds instance."
+  description = "List of security group ids to associate with rds instance."
   type        = list(string)
-  default     = []
+  default     = ["sg-wz9b7m0pyrj1vnmda7v8"]
 }
 
 variable "sql_collector_status" {
@@ -190,7 +163,13 @@ variable "create_database" {
 variable "databases" {
   description = "A list mapping used to add multiple databases. Each item supports keys: name, character_set and description. It should be set when create_database = true."
   type        = list(map(string))
-  default     = []
+  default     = [
+    {
+      name          = "demo"
+      character_set = "utf8"
+      description   = "demo"
+    },
+  ]
 }
 
 #################
@@ -205,13 +184,13 @@ variable "create_account" {
 variable "account_name" {
   description = "Name of a new database account. It should be set when create_account = true."
   type        = string
-  default     = ""
+  default     = "mysql"
 }
 
 variable "password" {
   description = "Operation database account password. It may consist of letters, digits, or underlines, with a length of 6 to 32 characters."
   type        = string
-  default     = ""
+  default     = "Seal@123"
 }
 
 variable "type" {
@@ -223,68 +202,5 @@ variable "type" {
 variable "privilege" {
   description = "The privilege of one account access database."
   type        = string
-  default     = "ReadOnly"
-}
-
-#################
-# Depreceted parameters
-#################
-variable "instance_id" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `existing_instance_id` instead."
-  type        = string
-  default     = ""
-}
-
-variable "vpc_security_group_ids" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `security_group_ids` instead."
-  type        = list(string)
-  default     = []
-}
-
-variable "retention_period" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `backup_retention_period` instead."
-  type        = number
-  default     = 7
-}
-
-variable "log_retention_period" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `log_backup_retention_period` instead."
-  type        = number
-  default     = 7
-}
-
-variable "backup_time" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `preferred_backup_time` instead."
-  type        = string
-  default     = "02:00Z-03:00Z"
-}
-
-variable "backup_period" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `preferred_backup_period` instead."
-  type        = list(string)
-  default     = []
-}
-
-variable "db_name" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `databases` instead."
-  type        = string
-  default     = ""
-}
-
-variable "db_names" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `databases` instead."
-  type        = list(string)
-  default     = []
-}
-
-variable "character_set" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 and use `databases` instead."
-  type        = string
-  default     = ""
-}
-
-variable "zone_id" {
-  description = "`(Deprecated)` It has been deprecated from version 2.0.0 ."
-  type        = string
-  default     = ""
+  default     = "ReadWrite"
 }
