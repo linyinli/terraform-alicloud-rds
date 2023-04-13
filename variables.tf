@@ -61,7 +61,7 @@ variable "instance_type" {
 variable "instance_storage_type" {
   description = "The storage type of DB instance."
   type        = string
-  default     = "local_ssd"
+  default     = "cloud_essd"
 }
 
 variable "instance_storage" {
