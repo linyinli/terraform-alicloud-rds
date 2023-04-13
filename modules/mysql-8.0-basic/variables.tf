@@ -1,25 +1,4 @@
 #################
-# Provider
-#################
-variable "region" {
-  description = "(Deprecated from version 2.4.0)The region used to launch this module resources."
-  default     = ""
-}
-variable "profile" {
-  description = "(Deprecated from version 2.4.0)The profile name as set in the shared credentials file. If not set, it will be sourced from the ALICLOUD_PROFILE environment variable."
-  default     = ""
-}
-variable "shared_credentials_file" {
-  description = "(Deprecated from version 2.4.0)This is the path to the shared credentials file. If this is not set and a profile is specified, $HOME/.aliyun/config.json will be used."
-  default     = ""
-}
-variable "skip_region_validation" {
-  description = "(Deprecated from version 2.4.0)Skip static validation of region ID. Used by users of alternative AlibabaCloud-like APIs or users w/ access to regions that are not public (yet)."
-  type        = bool
-  default     = false
-}
-
-#################
 # Rds Instance
 #################
 variable "instance_name" {
@@ -31,27 +10,27 @@ variable "instance_charge_type" {
   default     = "Postpaid"
 }
 variable "instance_storage" {
-  description = "The storage capacity of the instance. Unit: GB. The storage capacity increases at increments of 5 GB. For more information, see [Instance Types](https://www.alibabacloud.com/help/doc-detail/26312.htm)."
+  description = "The storage capacity of the instance. Unit: GB. Valid values: 20~6000. The storage capacity increases at increments of 5 GB. For more information, see [Instance Types](https://www.alibabacloud.com/help/doc-detail/26312.htm)."
   type        = number
   default     = 20
 }
 variable "instance_type" {
   description = "DB Instance type, for example: mysql.n1.micro.1. full list is : https://www.alibabacloud.com/help/zh/doc-detail/26312.htm"
-  default     = ""
+  default     = "mysql.n2.medium.1"
 }
 variable "security_group_ids" {
   description = "List of VPC security group ids to associate with rds instance."
   type        = list(string)
-  default     = []
+  default     = ["sg-wz9b7m0pyrj1vnmda7v8"]
 }
 variable "vswitch_id" {
   description = "The virtual switch ID to launch DB instances in one VPC."
-  default     = ""
+  default     = "vsw-wz9dx8gjsk2hhcajdnfoj"
 }
 variable "security_ips" {
   description = " List of IP addresses allowed to access all databases of an instance. The list contains up to 1,000 IP addresses, separated by commas. Supported formats include 0.0.0.0/0, 10.23.12.24 (IP), and 10.23.12.24/24 (Classless Inter-Domain Routing (CIDR) mode. /24 represents the length of the prefix in an IP address. The range of the prefix length is [1,32])."
   type        = list(string)
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 variable "tags" {
   description = "A mapping of tags to assign to the rds."
@@ -93,7 +72,7 @@ variable "backup_retention_period" {
 variable "enable_backup_log" {
   description = "Whether to backup instance log. Default to true."
   type        = bool
-  default     = false
+  default     = true
 }
 variable "log_backup_retention_period" {
   description = "Instance log backup retention days. Valid values: [7-730]. Default to 7. It can be larger than 'retention_period'."
@@ -130,11 +109,11 @@ variable "create_account" {
 }
 variable "account_name" {
   description = "Name of a new database account. It should be set when create_account = true."
-  default     = ""
+  default     = "demo"
 }
 variable "password" {
   description = "Operation database account password. It may consist of letters, digits, or underlines, with a length of 6 to 32 characters."
-  default     = ""
+  default     = "Seal@123"
 }
 variable "type" {
   description = "Privilege type of account. Normal: Common privilege. Super: High privilege.Default to Normal."
@@ -142,7 +121,7 @@ variable "type" {
 }
 variable "privilege" {
   description = "The privilege of one account access database."
-  default     = "ReadOnly"
+  default     = "ReadWrite"
 }
 
 #################
@@ -156,5 +135,11 @@ variable "create_database" {
 variable "databases" {
   description = "A list mapping used to add multiple databases. Each item supports keys: name, character_set and description. It should be set when create_database = true."
   type        = list(map(string))
-  default     = []
+  default     = [
+    {
+      name          = "demo"
+      character_set = "utf8"
+      description   = "The demo database."
+    },
+  ]
 }
